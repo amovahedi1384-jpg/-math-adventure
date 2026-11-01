@@ -1,0 +1,1984 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ماجراجویی ریاضی با پیشی دانا</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Vazirmatn Font for Persian -->
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    <style>
+        * {
+            font-family: 'Vazirmatn', sans-serif;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .bg-adventure {
+            background: radial-gradient(circle at top right, #fef08a, #fed7aa, #fbcfe8, #bfdbfe);
+            background-size: 200% 200%;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Tactile 3D Kid Buttons */
+        .btn-3d {
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 6px 0 rgba(0,0,0,0.18);
+            transform: translateY(0);
+        }
+        .btn-3d:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 rgba(0,0,0,0.18);
+        }
+
+        .btn-3d-emerald {
+            box-shadow: 0 6px 0 #059669;
+        }
+        .btn-3d-emerald:active {
+            box-shadow: 0 2px 0 #059669;
+        }
+
+        .btn-3d-amber {
+            box-shadow: 0 6px 0 #d97706;
+        }
+        .btn-3d-amber:active {
+            box-shadow: 0 2px 0 #d97706;
+        }
+
+        .btn-3d-indigo {
+            box-shadow: 0 6px 0 #4f46e5;
+        }
+        .btn-3d-indigo:active {
+            box-shadow: 0 2px 0 #4f46e5;
+        }
+
+        .btn-3d-rose {
+            box-shadow: 0 6px 0 #e11d48;
+        }
+        .btn-3d-rose:active {
+            box-shadow: 0 2px 0 #e11d48;
+        }
+
+        /* Animations */
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-6px) rotate(1.5deg); }
+        }
+        .animate-float {
+            animation: floatSlow 3.5s ease-in-out infinite;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            80% { transform: scale(1.08); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-pop {
+            animation: popIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.6); }
+            50% { box-shadow: 0 0 0 12px rgba(250, 204, 21, 0); }
+        }
+        .pulse-highlight {
+            animation: pulseGlow 2s infinite;
+        }
+
+        /* Space Background for Game 3 */
+        .space-canvas-bg {
+            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Laser beam animation */
+        @keyframes laserShoot {
+            0% { opacity: 1; stroke-width: 8; }
+            100% { opacity: 0; stroke-width: 1; }
+        }
+        .laser-line {
+            animation: laserShoot 0.35s ease-out forwards;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.4);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-adventure text-slate-800 flex flex-col min-h-screen">
+
+    <!-- TOP NAVIGATION & SCORE BAR -->
+    <header class="w-full max-w-5xl mx-auto px-3 pt-3 pb-2 flex flex-wrap items-center justify-between gap-2 z-20">
+        <!-- App Title & Home Button -->
+        <div class="flex items-center gap-2">
+            <button id="btnHome" onclick="app.goHome()" class="hidden btn-3d bg-white hover:bg-amber-50 text-amber-600 border-2 border-amber-300 rounded-2xl px-3.5 py-2 font-bold flex items-center gap-1.5 text-sm sm:text-base">
+                <span class="text-xl">🏠</span>
+                <span>منوی ماجراجویی</span>
+            </button>
+            <div id="headerLogo" class="flex items-center gap-2 bg-white/80 backdrop-blur-md px-4 py-2 rounded-2xl border-2 border-white shadow-sm">
+                <span class="text-2xl">🐱✨</span>
+                <h1 class="font-black text-base sm:text-xl text-purple-800">ریاضی با پیشی دانا</h1>
+            </div>
+        </div>
+
+        <!-- Score, Stars & Sound Controls -->
+        <div class="flex items-center gap-2 sm:gap-3">
+            <!-- Stars Counter -->
+            <div class="bg-amber-100/90 border-2 border-amber-300 rounded-2xl px-3 py-1.5 flex items-center gap-1.5 shadow-sm" title="مجموع ستاره‌ها">
+                <span class="text-xl sm:text-2xl animate-pulse">⭐</span>
+                <span id="totalStarsDisplay" class="font-black text-amber-800 text-base sm:text-lg">۰</span>
+            </div>
+
+            <!-- Points Counter -->
+            <div class="bg-emerald-100/90 border-2 border-emerald-300 rounded-2xl px-3 py-1.5 flex items-center gap-1.5 shadow-sm" title="امتیاز کل">
+                <span class="text-xl sm:text-2xl">🏆</span>
+                <span id="totalScoreDisplay" class="font-black text-emerald-800 text-base sm:text-lg">۰</span>
+            </div>
+
+            <!-- Sound Toggle Button -->
+            <button id="btnSound" onclick="soundFX.toggleMute()" class="btn-3d bg-white hover:bg-purple-50 border-2 border-purple-200 rounded-2xl p-2 text-xl sm:text-2xl shadow-sm" title="قطع/وصل صدا">
+                🔊
+            </button>
+        </div>
+    </header>
+
+    <!-- PISHI (CUTE CAT GUIDE) COMPANION BANNER -->
+    <section class="w-full max-w-5xl mx-auto px-3 my-1 z-10">
+        <div class="bg-white/90 backdrop-blur-md border-2 border-purple-200 rounded-3xl p-2.5 sm:p-3.5 shadow-md flex items-center gap-3 sm:gap-4 transition-all">
+            <!-- Animated SVG Cat Avatar -->
+            <div id="catAvatarContainer" onclick="catGuide.poke()" class="cursor-pointer flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-b from-purple-100 to-pink-100 rounded-2xl border-2 border-purple-300 flex items-center justify-center relative animate-float shadow-inner">
+                <svg id="pishiSvg" viewBox="0 0 100 100" class="w-14 h-14 sm:w-16 sm:h-16">
+                    <!-- Ears -->
+                    <polygon points="18,42 12,12 40,26" fill="#fb923c" stroke="#9a3412" stroke-width="3" stroke-linejoin="round"/>
+                    <polygon points="20,36 16,18 34,27" fill="#fda4af"/>
+                    <polygon points="82,42 88,12 60,26" fill="#fb923c" stroke="#9a3412" stroke-width="3" stroke-linejoin="round"/>
+                    <polygon points="80,36 84,18 66,27" fill="#fda4af"/>
+                    <!-- Head -->
+                    <ellipse cx="50" cy="54" rx="36" ry="30" fill="#fb923c" stroke="#9a3412" stroke-width="3"/>
+                    <!-- Forehead Stripes -->
+                    <path d="M44,27 L44,35 M50,25 L50,36 M56,27 L56,35" stroke="#c2410c" stroke-width="3" stroke-linecap="round"/>
+                    <!-- Cheeks -->
+                    <ellipse cx="26" cy="58" rx="6" ry="3.5" fill="#f43f5e" opacity="0.45"/>
+                    <ellipse cx="74" cy="58" rx="6" ry="3.5" fill="#f43f5e" opacity="0.45"/>
+                    <!-- Eyes Group (Changes by state) -->
+                    <g id="catEyes">
+                        <circle cx="35" cy="48" r="5.5" fill="#1e293b"/>
+                        <circle cx="33.5" cy="46" r="2" fill="#ffffff"/>
+                        <circle cx="65" cy="48" r="5.5" fill="#1e293b"/>
+                        <circle cx="63.5" cy="46" r="2" fill="#ffffff"/>
+                    </g>
+                    <!-- Nose -->
+                    <polygon points="47,54 53,54 50,58" fill="#f43f5e"/>
+                    <!-- Mouth Group (Changes by state) -->
+                    <g id="catMouth">
+                        <path d="M43,61 Q50,67 50,58 Q50,67 57,61" fill="none" stroke="#9a3412" stroke-width="2.8" stroke-linecap="round"/>
+                    </g>
+                    <!-- Whiskers -->
+                    <path d="M18,52 L6,50 M18,57 L6,59 M82,52 L94,50 M82,57 L94,59" stroke="#9a3412" stroke-width="2" stroke-linecap="round"/>
+                    <!-- Little Graduation/Wizard Hat -->
+                    <polygon points="34,26 50,8 66,26" fill="#6366f1" stroke="#312e81" stroke-width="2.5" stroke-linejoin="round"/>
+                    <circle cx="50" cy="8" r="3.5" fill="#facc15"/>
+                </svg>
+                <span class="absolute -bottom-1.5 bg-purple-600 text-white text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-full shadow">پیشی دانا</span>
+            </div>
+
+            <!-- Speech Bubble Text & Difficulty / Progress Info -->
+            <div class="flex-1 flex flex-col justify-center">
+                <div id="catSpeechText" class="text-slate-800 font-bold text-sm sm:text-lg leading-relaxed">
+                    سلام قهرمان کوچولو! به دنیای ریاضی خوش اومدی. یکی از ماجراجویی‌های پایین رو انتخاب کن تا با هم بازی کنیم! 🐾
+                </div>
+                <!-- Sub-status bar shown inside games -->
+                <div id="gameSubHeader" class="hidden mt-2 pt-2 border-t border-purple-100 flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm">
+                    <div class="flex items-center gap-2">
+                        <span id="currentGameBadge" class="bg-purple-100 text-purple-800 font-bold px-2.5 py-0.5 rounded-xl"></span>
+                        <button onclick="app.openDifficultyModal()" class="bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold px-2.5 py-0.5 rounded-xl border border-amber-300 flex items-center gap-1 transition">
+                            <span>سطح:</span>
+                            <span id="currentDiffBadge">آسان</span>
+                            <span>⚙️</span>
+                        </button>
+                    </div>
+                    <!-- Current Question Potential Stars -->
+                    <div class="flex items-center gap-1 bg-slate-100 px-2.5 py-0.5 rounded-xl">
+                        <span class="text-slate-600 font-medium">ستاره این مرحله:</span>
+                        <span id="roundStarsPreview" class="text-sm sm:text-base tracking-widest">⭐⭐⭐</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="w-full max-w-5xl mx-auto px-3 py-2 flex-1 flex flex-col">
+
+        <!-- ==========================================
+             VIEW 0: ADVENTURE SELECTION MENU
+        =========================================== -->
+        <div id="viewMenu" class="flex-1 flex flex-col justify-center py-2">
+            <div class="text-center mb-4">
+                <h2 class="text-2xl sm:text-3xl font-black text-slate-800 drop-shadow-sm">🌟 انتخاب ماجراجویی 🌟</h2>
+                <p class="text-slate-600 font-medium text-sm sm:text-base mt-1">هر بازی رو که دوست داری لمس کن تا واردش بشیم!</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+                <!-- Card 1: Multiplication Garden -->
+                <button onclick="app.selectGame('garden')" class="btn-3d group text-right bg-gradient-to-br from-emerald-400 to-teal-500 p-1 rounded-3xl shadow-lg hover:scale-[1.01] transition">
+                    <div class="bg-white/95 rounded-[20px] p-4 sm:p-5 h-full flex flex-col justify-between">
+                        <div class="flex items-start justify-between gap-3">
+                            <div>
+                                <span class="inline-block bg-emerald-100 text-emerald-800 text-xs font-black px-2.5 py-1 rounded-full mb-1.5">بازی ۱ • مفهوم ضرب</span>
+                                <h3 class="text-xl sm:text-2xl font-black text-emerald-900">🍎 باغ ضرب</h3>
+                                <p class="text-slate-600 text-xs sm:text-sm mt-1 leading-relaxed">
+                                    سیب‌های خوشمزه رو توی ردیف‌ها و ستون‌های باغچه بچین و جواب ضرب رو با تصویر کشف کن!
+                                </p>
+                            </div>
+                            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-emerald-100 border-2 border-emerald-300 flex items-center justify-center text-4xl sm:text-5xl flex-shrink-0 group-hover:scale-110 transition">
+                                🌳
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-emerald-100 flex items-center justify-between">
+                            <span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg">ردیف و ستون</span>
+                            <span class="bg-emerald-500 text-white font-black text-sm px-4 py-1.5 rounded-xl shadow-sm group-hover:bg-emerald-600">شروع بازی ⬅️</span>
+                        </div>
+                    </div>
+                </button>
+
+                <!-- Card 2: Fair Cookies (Division) -->
+                <button onclick="app.selectGame('cookies')" class="btn-3d group text-right bg-gradient-to-br from-amber-400 to-orange-500 p-1 rounded-3xl shadow-lg hover:scale-[1.01] transition">
+                    <div class="bg-white/95 rounded-[20px] p-4 sm:p-5 h-full flex flex-col justify-between">
+                        <div class="flex items-start justify-between gap-3">
+                            <div>
+                                <span class="inline-block bg-amber-100 text-amber-800 text-xs font-black px-2.5 py-1 rounded-full mb-1.5">بازی ۲ • تقسیم و باقی‌مانده</span>
+                                <h3 class="text-xl sm:text-2xl font-black text-amber-900">🍪 بیسکویت‌های عادلانه</h3>
+                                <p class="text-slate-600 text-xs sm:text-sm mt-1 leading-relaxed">
+                                    کلوچه‌ها رو مساوی بین بشقاب دوست‌ها پخش کن تا همه خوشحال بشن و باقی‌مانده رو پیدا کن!
+                                </p>
+                            </div>
+                            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-amber-100 border-2 border-amber-300 flex items-center justify-center text-4xl sm:text-5xl flex-shrink-0 group-hover:scale-110 transition">
+                                🍪
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-amber-100 flex items-center justify-between">
+                            <span class="text-xs font-bold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-lg">پخش مساوی</span>
+                            <span class="bg-amber-500 text-white font-black text-sm px-4 py-1.5 rounded-xl shadow-sm group-hover:bg-amber-600">شروع بازی ⬅️</span>
+                        </div>
+                    </div>
+                </button>
+
+                <!-- Card 3: Space Astronaut (Speed Multiplication) -->
+                <button onclick="app.selectGame('space')" class="btn-3d group text-right bg-gradient-to-br from-indigo-500 to-purple-600 p-1 rounded-3xl shadow-lg hover:scale-[1.01] transition">
+                    <div class="bg-white/95 rounded-[20px] p-4 sm:p-5 h-full flex flex-col justify-between">
+                        <div class="flex items-start justify-between gap-3">
+                            <div>
+                                <span class="inline-block bg-indigo-100 text-indigo-800 text-xs font-black px-2.5 py-1 rounded-full mb-1.5">بازی ۳ • هیجان و سرعت</span>
+                                <h3 class="text-xl sm:text-2xl font-black text-indigo-900">🚀 فضانورد جدول ضرب</h3>
+                                <p class="text-slate-600 text-xs sm:text-sm mt-1 leading-relaxed">
+                                    با سفینه فضایی به شهاب‌سنگ‌های جدول ضرب شلیک کن! هر چقدر ماهرتر بشی سرعت هم بیشتر می‌شه!
+                                </p>
+                            </div>
+                            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-indigo-100 border-2 border-indigo-300 flex items-center justify-center text-4xl sm:text-5xl flex-shrink-0 group-hover:scale-110 transition">
+                                🛸
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-indigo-100 flex items-center justify-between">
+                            <span class="text-xs font-bold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-lg">بازی سرعتی</span>
+                            <span class="bg-indigo-600 text-white font-black text-sm px-4 py-1.5 rounded-xl shadow-sm group-hover:bg-indigo-700">شروع بازی ⬅️</span>
+                        </div>
+                    </div>
+                </button>
+
+                <!-- Card 4: Little Shopkeeper (Word Problems) -->
+                <button onclick="app.selectGame('shop')" class="btn-3d group text-right bg-gradient-to-br from-pink-500 to-rose-500 p-1 rounded-3xl shadow-lg hover:scale-[1.01] transition">
+                    <div class="bg-white/95 rounded-[20px] p-4 sm:p-5 h-full flex flex-col justify-between">
+                        <div class="flex items-start justify-between gap-3">
+                            <div>
+                                <span class="inline-block bg-rose-100 text-rose-800 text-xs font-black px-2.5 py-1 rounded-full mb-1.5">بازی ۴ • مسئله‌های زندگی واقعی</span>
+                                <h3 class="text-xl sm:text-2xl font-black text-rose-900">🏪 مغازه‌دار کوچولو</h3>
+                                <p class="text-slate-600 text-xs sm:text-sm mt-1 leading-relaxed">
+                                    فروشنده مغازه شو! قیمت خوراکی‌ها و لوازم‌تحریر مشتری‌ها رو حساب کن یا بقیه پولشون رو بده!
+                                </p>
+                            </div>
+                            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-rose-100 border-2 border-rose-300 flex items-center justify-center text-4xl sm:text-5xl flex-shrink-0 group-hover:scale-110 transition">
+                                🛒
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-rose-100 flex items-center justify-between">
+                            <span class="text-xs font-bold text-rose-700 bg-rose-50 px-2.5 py-1 rounded-lg">خرید و فروش</span>
+                            <span class="bg-rose-500 text-white font-black text-sm px-4 py-1.5 rounded-xl shadow-sm group-hover:bg-rose-600">شروع بازی ⬅️</span>
+                        </div>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             VIEW 1: MULTIPLICATION GARDEN (باغ ضرب)
+        =========================================== -->
+        <div id="viewGarden" class="hidden flex-1 flex flex-col gap-3">
+            <div class="bg-white/95 border-2 border-emerald-300 rounded-3xl p-4 sm:p-5 shadow-md flex-1 flex flex-col justify-between">
+                <!-- Problem Prompt -->
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-3 bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-3 sm:p-4">
+                    <div class="text-center sm:text-right">
+                        <span class="text-xs sm:text-sm font-bold text-emerald-700 block">ماموریت باغبان کوچولو:</span>
+                        <h3 id="gardenPromptText" class="text-lg sm:text-2xl font-black text-emerald-950 mt-0.5">
+                            ۳ ردیف سیب بچین که در هر ردیف ۴ تا سیب باشد!
+                        </h3>
+                    </div>
+                    <!-- Math Formula Box -->
+                    <div class="bg-white border-2 border-emerald-400 rounded-2xl px-4 py-2 flex items-center gap-2 text-2xl sm:text-3xl font-black text-emerald-800 shadow-sm" dir="ltr">
+                        <span id="gardenNumRows">۳</span>
+                        <span class="text-amber-500">×</span>
+                        <span id="gardenNumCols">۴</span>
+                        <span>=</span>
+                        <span id="gardenFormulaAns" class="text-rose-600 bg-rose-50 px-2.5 py-0.5 rounded-xl border border-rose-200">؟</span>
+                    </div>
+                </div>
+
+                <!-- Interactive Garden Grid Section -->
+                <div class="my-3 flex flex-col items-center">
+                    <div class="flex flex-wrap items-center justify-center gap-2 mb-3">
+                        <button id="btnPlantNextRow" onclick="gardenGame.plantNextRow()" class="btn-3d btn-3d-emerald bg-emerald-500 hover:bg-emerald-600 text-white font-black px-4 py-2 rounded-2xl text-sm sm:text-base flex items-center gap-1.5">
+                            <span>🌱 کاشتن یک ردیف کامل</span>
+                        </button>
+                        <button id="btnPlantAll" onclick="gardenGame.plantAll()" class="btn-3d bg-teal-100 hover:bg-teal-200 text-teal-900 border-2 border-teal-300 font-bold px-3.5 py-2 rounded-2xl text-sm">
+                            <span>🍎 چیدن همه سیب‌ها</span>
+                        </button>
+                        <button onclick="gardenGame.clearGrid()" class="btn-3d bg-slate-100 hover:bg-slate-200 text-slate-700 border-2 border-slate-300 font-bold px-3 py-2 rounded-2xl text-sm">
+                            <span>🧹 پاک کردن</span>
+                        </button>
+                    </div>
+
+                    <!-- Dynamic Soil Grid -->
+                    <div class="bg-amber-900/15 border-4 border-amber-700/40 rounded-3xl p-3 sm:p-4 shadow-inner max-w-full overflow-x-auto">
+                        <div id="gardenGridContainer" class="flex flex-col gap-2 items-center">
+                            <!-- Rows injected by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Live Planted Counter -->
+                    <div class="mt-2.5 flex items-center gap-2 bg-amber-50 border border-amber-300 px-4 py-1 rounded-full text-sm sm:text-base font-bold text-amber-900">
+                        <span>سیب‌های کاشته شده در باغچه:</span>
+                        <span id="gardenPlantedCount" class="text-lg font-black text-emerald-700">۰</span>
+                        <span>عدد</span>
+                    </div>
+                </div>
+
+                <!-- Multiple Choice Answer Buttons -->
+                <div class="border-t-2 border-emerald-100 pt-3">
+                    <p class="text-center text-slate-600 font-bold text-sm sm:text-base mb-2.5">
+                        حالا بگو روی هم چند تا سیب در باغچه داریم؟
+                    </p>
+                    <div id="gardenChoices" class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        <!-- Choice buttons injected by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             VIEW 2: FAIR COOKIES (بیسکویت‌های عادلانه)
+        =========================================== -->
+        <div id="viewCookies" class="hidden flex-1 flex flex-col gap-3">
+            <div class="bg-white/95 border-2 border-amber-300 rounded-3xl p-4 sm:p-5 shadow-md flex-1 flex flex-col justify-between">
+                <!-- Problem Header -->
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-3 bg-amber-50 border-2 border-amber-200 rounded-2xl p-3 sm:p-4">
+                    <div class="text-center sm:text-right">
+                        <span class="text-xs sm:text-sm font-bold text-amber-700 block">پخش مساوی و عادلانه:</span>
+                        <h3 id="cookiePromptText" class="text-lg sm:text-2xl font-black text-amber-950 mt-0.5">
+                            ۱۲ کلوچه داریم و ۴ دوست منتظرند. کلوچه‌ها را مساوی پخش کن!
+                        </h3>
+                    </div>
+                    <div class="bg-white border-2 border-amber-400 rounded-2xl px-4 py-2 flex items-center gap-2 text-2xl sm:text-3xl font-black text-amber-800 shadow-sm" dir="ltr">
+                        <span id="cookieTotalNum">۱۲</span>
+                        <span class="text-purple-600">÷</span>
+                        <span id="cookieFriendsNum">۴</span>
+                        <span>=</span>
+                        <span class="text-rose-600 bg-rose-50 px-2.5 py-0.5 rounded-xl border border-rose-200">؟</span>
+                    </div>
+                </div>
+
+                <!-- Cookie Tray & Quick Actions -->
+                <div class="my-2 flex flex-col items-center">
+                    <div class="w-full bg-orange-50/90 border-2 border-dashed border-amber-400 rounded-2xl p-3 flex flex-col items-center">
+                        <div class="flex flex-wrap items-center justify-between w-full gap-2 mb-2">
+                            <span class="text-xs sm:text-sm font-bold text-amber-900">
+                                🍪 سینی کلوچه‌های روی میز (<span id="trayRemainingCount" class="font-black text-base text-rose-600">۱۲</span> عدد مانده):
+                            </span>
+                            <div class="flex flex-wrap gap-1.5">
+                                <button onclick="cookieGame.dealOneRound()" class="btn-3d btn-3d-amber bg-amber-500 hover:bg-amber-600 text-white text-xs sm:text-sm font-black px-3 py-1.5 rounded-xl">
+                                    ✨ به هر نفر ۱ کلوچه بده
+                                </button>
+                                <button onclick="cookieGame.resetPlates()" class="btn-3d bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 text-xs sm:text-sm font-bold px-2.5 py-1.5 rounded-xl">
+                                    🔄 جمع کردن همه
+                                </button>
+                            </div>
+                        </div>
+                        <div id="cookieTrayContainer" class="flex flex-wrap items-center justify-center gap-1.5 min-h-[44px] py-1">
+                            <!-- Tray cookies rendered here -->
+                        </div>
+                    </div>
+
+                    <!-- Friends & Plates Grid -->
+                    <p class="text-xs sm:text-sm text-slate-500 font-bold mt-2 mb-1.5 text-center">
+                        💡 روی هر بشقاب بزن تا ۱ کلوچه توی اون بشقاب بذاری (یا روی کلوچه داخل بشقاب بزن تا برگرده توی سینی):
+                    </p>
+                    <div id="friendsPlatesGrid" class="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 sm:gap-3 my-1">
+                        <!-- Friends plates injected by JS -->
+                    </div>
+
+                    <!-- Fairness Status Pill -->
+                    <div id="fairnessStatusBanner" class="mt-2 px-4 py-1.5 rounded-full text-xs sm:text-sm font-black border flex items-center gap-2 transition-all">
+                        <!-- Updated dynamically -->
+                    </div>
+                </div>
+
+                <!-- Answer Selection Controls -->
+                <div class="border-t-2 border-amber-100 pt-3 flex flex-col gap-3">
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-4 bg-slate-50 p-3 rounded-2xl border border-slate-200">
+                        <!-- Per Friend Answer Selector -->
+                        <div class="flex items-center gap-2">
+                            <label class="font-bold text-slate-700 text-sm sm:text-base">سهم هر دوست:</label>
+                            <div class="flex items-center gap-1.5">
+                                <button onclick="cookieGame.adjustInput('quotient', -1)" class="btn-3d bg-white border-2 border-slate-300 w-10 h-10 rounded-xl font-black text-xl text-slate-700">-</button>
+                                <span id="inputQuotientDisplay" class="w-12 text-center font-black text-2xl text-amber-800 bg-amber-100 border-2 border-amber-300 rounded-xl py-1">۰</span>
+                                <button onclick="cookieGame.adjustInput('quotient', 1)" class="btn-3d bg-white border-2 border-slate-300 w-10 h-10 rounded-xl font-black text-xl text-slate-700">+</button>
+                            </div>
+                        </div>
+
+                        <!-- Remainder Selector -->
+                        <div id="remainderInputGroup" class="flex items-center gap-2">
+                            <label class="font-bold text-slate-700 text-sm sm:text-base">باقی‌مانده در سینی:</label>
+                            <div class="flex items-center gap-1.5">
+                                <button onclick="cookieGame.adjustInput('remainder', -1)" class="btn-3d bg-white border-2 border-slate-300 w-10 h-10 rounded-xl font-black text-xl text-slate-700">-</button>
+                                <span id="inputRemainderDisplay" class="w-12 text-center font-black text-2xl text-purple-800 bg-purple-100 border-2 border-purple-300 rounded-xl py-1">۰</span>
+                                <button onclick="cookieGame.adjustInput('remainder', 1)" class="btn-3d bg-white border-2 border-slate-300 w-10 h-10 rounded-xl font-black text-xl text-slate-700">+</button>
+                            </div>
+                        </div>
+
+                        <button onclick="cookieGame.checkAnswer()" class="btn-3d btn-3d-emerald bg-emerald-500 hover:bg-emerald-600 text-white font-black px-6 py-2.5 rounded-2xl text-base sm:text-lg shadow-md">
+                            ✅ بررسی پاسخ
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             VIEW 3: SPACE ASTRONAUT (فضانورد جدول ضرب)
+        =========================================== -->
+        <div id="viewSpace" class="hidden flex-1 flex flex-col gap-3">
+            <div class="bg-slate-900 border-4 border-indigo-400 rounded-3xl p-3 sm:p-4 shadow-xl flex-1 flex flex-col justify-between text-white">
+                <!-- Space HUD -->
+                <div class="flex flex-wrap items-center justify-between gap-2 bg-indigo-950/90 border border-indigo-700 rounded-2xl px-3.5 py-2">
+                    <div class="flex items-center gap-3">
+                        <span class="text-xs sm:text-sm font-bold text-indigo-200">شهاب‌سنگ‌های منهدم شده:</span>
+                        <span id="spaceWaveProgress" class="bg-indigo-700 text-amber-300 font-black px-3 py-0.5 rounded-xl text-sm sm:text-base">۰ از ۵</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs text-indigo-300">سرعت شهاب‌سنگ:</span>
+                        <button onclick="spaceGame.changeSpeed(-0.25)" class="bg-indigo-800 hover:bg-indigo-700 px-2.5 py-1 rounded-lg text-xs font-bold border border-indigo-600">🐢 کندتر</button>
+                        <span id="spaceSpeedBadge" class="text-xs font-black text-amber-300 px-1">معمولی</span>
+                        <button onclick="spaceGame.changeSpeed(0.25)" class="bg-indigo-800 hover:bg-indigo-700 px-2.5 py-1 rounded-lg text-xs font-bold border border-indigo-600">🐇 سریع‌تر</button>
+                    </div>
+                </div>
+
+                <!-- Interactive Space Arena -->
+                <div id="spaceArena" class="space-canvas-bg my-2 rounded-2xl border-2 border-indigo-500/60 relative h-64 sm:h-80 w-full overflow-hidden">
+                    <!-- Decorative Background Stars -->
+                    <div id="spaceStarsBg" class="absolute inset-0 pointer-events-none"></div>
+
+                    <!-- Laser SVG Overlay -->
+                    <svg id="spaceLaserSvg" class="absolute inset-0 w-full h-full pointer-events-none z-10"></svg>
+
+                    <!-- Falling Meteor Element -->
+                    <div id="spaceMeteor" class="absolute left-1/2 -translate-x-1/2 z-20 flex flex-col items-center transition-transform duration-75" style="top: 10px;">
+                        <div class="relative flex items-center justify-center">
+                            <!-- Fiery Meteor SVG -->
+                            <svg viewBox="0 0 120 100" class="w-32 h-24 sm:w-36 sm:h-28 drop-shadow-[0_0_15px_rgba(249,115,22,0.8)]">
+                                <path d="M30,20 Q60,-5 90,20 Q115,45 95,75 Q60,98 25,75 Q5,45 30,20 Z" fill="#b45309" stroke="#f97316" stroke-width="4"/>
+                                <circle cx="38" cy="36" r="8" fill="#78350f" opacity="0.6"/>
+                                <circle cx="80" cy="62" r="10" fill="#78350f" opacity="0.6"/>
+                                <circle cx="45" cy="70" r="6" fill="#78350f" opacity="0.6"/>
+                            </svg>
+                            <!-- Multiplication Equation on Meteor -->
+                            <div id="meteorEquationText" dir="ltr" class="absolute inset-0 flex items-center justify-center font-black text-2xl sm:text-3xl text-amber-100 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
+                                ۳ × ۴
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Explosion Particle Effect Container -->
+                    <div id="spaceExplosion" class="hidden absolute z-30 pointer-events-none text-5xl transform -translate-x-1/2 -translate-y-1/2">
+                        💥✨
+                    </div>
+
+                    <!-- Spaceship at Bottom -->
+                    <div id="spaceShip" class="absolute bottom-2 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center">
+                        <svg viewBox="0 0 80 80" class="w-16 h-16 sm:w-20 sm:h-20 drop-shadow-[0_0_12px_rgba(56,189,248,0.8)]">
+                            <!-- Engine Flame -->
+                            <polygon points="32,65 40,79 48,65" fill="#facc15" class="animate-pulse"/>
+                            <!-- Wings -->
+                            <polygon points="10,60 28,38 28,64" fill="#ef4444" stroke="#991b1b" stroke-width="2"/>
+                            <polygon points="70,60 52,38 52,64" fill="#ef4444" stroke="#991b1b" stroke-width="2"/>
+                            <!-- Rocket Body -->
+                            <path d="M40,8 C25,25 25,45 26,65 L54,65 C55,45 55,25 40,8 Z" fill="#f8fafc" stroke="#38bdf8" stroke-width="3"/>
+                            <!-- Cockpit Window -->
+                            <circle cx="40" cy="36" r="9" fill="#38bdf8" stroke="#0284c7" stroke-width="2.5"/>
+                            <circle cx="37" cy="33" r="3" fill="#ffffff"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- 4 Big Laser Target Buttons -->
+                <div>
+                    <p class="text-center text-indigo-200 font-bold text-xs sm:text-sm mb-2">
+                        ⚡ جواب درست رو انتخاب کن تا سفینه به شهاب‌سنگ شلیک کنه:
+                    </p>
+                    <div id="spaceChoicesGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        <!-- Choices injected by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             VIEW 4: LITTLE SHOPKEEPER (مغازه‌دار کوچولو)
+        =========================================== -->
+        <div id="viewShop" class="hidden flex-1 flex flex-col gap-3">
+            <div class="bg-white/95 border-2 border-rose-300 rounded-3xl p-4 sm:p-5 shadow-md flex-1 flex flex-col justify-between">
+                <!-- Shop Awning & Customer Area -->
+                <div class="bg-gradient-to-r from-rose-50 via-pink-50 to-amber-50 border-2 border-rose-200 rounded-2xl p-3.5 sm:p-4 flex flex-col sm:flex-row items-center gap-4">
+                    <!-- Customer Avatar -->
+                    <div class="flex flex-col items-center flex-shrink-0">
+                        <div id="shopCustomerAvatar" class="w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-2xl border-2 border-rose-300 shadow flex items-center justify-center text-4xl sm:text-5xl">
+                            👧
+                        </div>
+                        <span id="shopCustomerName" class="mt-1 text-xs font-black bg-rose-200 text-rose-900 px-2.5 py-0.5 rounded-full">مشتری: سارا</span>
+                    </div>
+
+                    <!-- Customer Order Speech Bubble -->
+                    <div class="flex-1 bg-white border-2 border-rose-300 rounded-2xl p-3 sm:p-4 shadow-sm relative">
+                        <span id="shopProblemTypeBadge" class="inline-block bg-amber-100 text-amber-800 text-xs font-black px-2.5 py-0.5 rounded-full mb-1">
+                            محاسبه قیمت کل (ضرب)
+                        </span>
+                        <p id="shopCustomerQuestion" class="text-base sm:text-xl font-black text-slate-800 leading-relaxed">
+                            «سلام مغازه‌دار عزیز! من ۵ تا مداد می‌خواهم که قیمت هر کدام ۳ تومان است. جمعاً چند تومان باید بدهم؟»
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Shop Shelf Visual Counter -->
+                <div class="my-3 bg-amber-50/70 border-2 border-amber-200 rounded-3xl p-3.5 sm:p-4 flex flex-col items-center">
+                    <div class="flex items-center justify-between w-full mb-2.5 pb-1.5 border-b border-amber-200">
+                        <span class="text-xs sm:text-sm font-black text-amber-900 flex items-center gap-1.5">
+                            <span>🛍️ میز پیشخوان مغازه و برچسب قیمت:</span>
+                        </span>
+                        <span id="shopUnitTag" class="bg-emerald-100 text-emerald-900 border border-emerald-300 font-black text-xs sm:text-sm px-3 py-1 rounded-xl">
+                            هر مداد = ۳ تومان
+                        </span>
+                    </div>
+
+                    <!-- Visual Items Display on Counter -->
+                    <div id="shopShelfItems" class="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 py-2 min-h-[90px]">
+                        <!-- Items with price tags rendered by JS -->
+                    </div>
+
+                    <!-- Helper Wallet / Change info if applicable -->
+                    <div id="shopWalletBanner" class="hidden mt-2 bg-purple-100 border border-purple-300 text-purple-900 px-4 py-1.5 rounded-xl font-bold text-xs sm:text-sm">
+                    </div>
+                </div>
+
+                <!-- Cash Register Answer Choices -->
+                <div class="border-t-2 border-rose-100 pt-3">
+                    <p id="shopAnswerPromptLabel" class="text-center text-slate-600 font-bold text-sm sm:text-base mb-2.5">
+                        💳 مبلغ یا عدد درست رو روی صندوق مغازه بزن:
+                    </p>
+                    <div id="shopChoicesGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        <!-- Choices injected by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ==========================================
+         MODAL 1: DIFFICULTY SELECTION MODAL
+    =========================================== -->
+    <div id="modalDifficulty" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white border-4 border-purple-300 rounded-3xl max-w-md w-full p-5 sm:p-6 shadow-2xl animate-pop text-center">
+            <div class="text-4xl mb-2">🎯</div>
+            <h3 class="text-xl sm:text-2xl font-black text-purple-900">سطح بازی رو انتخاب کن!</h3>
+            <p class="text-slate-600 text-xs sm:text-sm mt-1 mb-4">دوست داری بازی چقدر چالش‌برانگیز باشه؟</p>
+
+            <div class="flex flex-col gap-2.5">
+                <button onclick="app.setDifficulty('easy')" class="btn-3d bg-emerald-100 hover:bg-emerald-200 border-2 border-emerald-400 rounded-2xl p-3 flex items-center justify-between text-right">
+                    <div>
+                        <div class="font-black text-emerald-900 text-base sm:text-lg">🌱 آسان (شروع عالی)</div>
+                        <div class="text-emerald-700 text-xs">اعداد کوچک (۱ تا ۴) • بدون باقی‌مانده</div>
+                    </div>
+                    <span class="text-2xl">⭐</span>
+                </button>
+
+                <button onclick="app.setDifficulty('medium')" class="btn-3d bg-sky-100 hover:bg-sky-200 border-2 border-sky-400 rounded-2xl p-3 flex items-center justify-between text-right">
+                    <div>
+                        <div class="font-black text-sky-900 text-base sm:text-lg">🌼 متوسط (تمرین بیشتر)</div>
+                        <div class="text-sky-700 text-xs">اعداد متوسط (۲ تا ۶) • سرعت متعادل</div>
+                    </div>
+                    <span class="text-2xl">⭐⭐</span>
+                </button>
+
+                <button onclick="app.setDifficulty('hard')" class="btn-3d bg-amber-100 hover:bg-amber-200 border-2 border-amber-400 rounded-2xl p-3 flex items-center justify-between text-right">
+                    <div>
+                        <div class="font-black text-amber-900 text-base sm:text-lg">🔥 سخت (قهرمان ریاضی)</div>
+                        <div class="text-amber-800 text-xs">اعداد بزرگ‌تر (۴ تا ۹) • تقسیم با باقی‌مانده</div>
+                    </div>
+                    <span class="text-2xl">⭐⭐⭐</span>
+                </button>
+
+                <button onclick="app.setDifficulty('veryhard')" class="btn-3d bg-rose-100 hover:bg-rose-200 border-2 border-rose-400 rounded-2xl p-3 flex items-center justify-between text-right">
+                    <div>
+                        <div class="font-black text-rose-900 text-base sm:text-lg">👑 خیلی سخت (استاد بزرگ)</div>
+                        <div class="text-rose-800 text-xs">اعداد تا ۱۰ و ۱۲ • محاسبه باقی‌مانده پول و سرعت بالا</div>
+                    </div>
+                    <span class="text-2xl">🏆</span>
+                </button>
+            </div>
+
+            <button onclick="app.closeDifficultyModal()" class="mt-4 text-slate-500 hover:text-slate-700 font-bold text-sm underline">
+                بستن پنجره
+            </button>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         MODAL 2: VISUAL EXPLANATION ON MISTAKE
+         (نمایش پاسخ درست با تصویر بعد از اشتباه)
+    =========================================== -->
+    <div id="modalVisualHelp" class="hidden fixed inset-0 bg-slate-900/65 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4">
+        <div class="bg-white border-4 border-amber-400 rounded-3xl max-w-lg w-full p-4 sm:p-6 shadow-2xl animate-pop max-h-[90vh] overflow-y-auto">
+            <!-- Header with Encouraging Cat -->
+            <div class="flex items-center gap-3 bg-amber-50 border-2 border-amber-200 rounded-2xl p-3 mb-3">
+                <div class="text-4xl flex-shrink-0">🐱💡</div>
+                <div>
+                    <h4 class="font-black text-amber-900 text-base sm:text-lg">اشکالی نداره عزیزم! بیا با هم شکلش رو ببینیم:</h4>
+                    <p id="visualHelpSubtitle" class="text-xs sm:text-sm text-amber-800 font-medium mt-0.5">
+                        وقتی با شکل بشماریم خیلی راحت‌تر یاد می‌گیریم!
+                    </p>
+                </div>
+            </div>
+
+            <!-- Dynamic Visual Representation Container -->
+            <div id="visualHelpDiagram" class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-3 sm:p-4 my-3 flex flex-col items-center justify-center text-center">
+                <!-- Populated dynamically with visual rows, plates, stars, or price tags -->
+            </div>
+
+            <!-- Step-by-Step Text Explanation -->
+            <div id="visualHelpConclusion" class="bg-emerald-50 border-2 border-emerald-300 rounded-2xl p-3 text-center font-black text-emerald-900 text-base sm:text-lg mb-4">
+                <!-- e.g. پس ۳ تا ردیف ۴ تایی می‌شود ۱۲ تا! -->
+            </div>
+
+            <button onclick="app.closeVisualHelpModal()" class="w-full btn-3d btn-3d-emerald bg-emerald-500 hover:bg-emerald-600 text-white font-black py-3 rounded-2xl text-base sm:text-lg">
+                آهان یاد گرفتم! بریم ادامه بازی 👍
+            </button>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         MODAL 3: ROUND VICTORY / STAR REWARD MODAL
+    =========================================== -->
+    <div id="modalReward" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white border-4 border-emerald-400 rounded-3xl max-w-sm w-full p-5 sm:p-6 shadow-2xl animate-pop text-center">
+            <div id="rewardStarsContainer" class="text-5xl sm:text-6xl mb-3 tracking-widest animate-bounce">
+                ⭐⭐⭐
+            </div>
+            <h3 id="rewardTitle" class="text-2xl font-black text-emerald-900">آفرین قهرمان باهوش!</h3>
+            <p id="rewardDesc" class="text-slate-600 font-bold text-sm sm:text-base mt-1 mb-4">
+                بدون خطا جواب دادی و ۳ ستاره درخشان گرفتی!
+            </p>
+            <div class="bg-amber-50 border-2 border-amber-200 rounded-2xl py-2 px-4 mb-4 inline-flex items-center gap-2">
+                <span class="font-bold text-amber-900 text-sm">امتیاز دریافتی:</span>
+                <span id="rewardPointsText" class="font-black text-lg text-emerald-700">+۳۰</span>
+            </div>
+
+            <div class="flex gap-2.5">
+                <button onclick="app.nextQuestion()" class="flex-1 btn-3d btn-3d-emerald bg-emerald-500 hover:bg-emerald-600 text-white font-black py-3 rounded-2xl text-base sm:text-lg">
+                    مرحله بعدی ⬅️
+                </button>
+                <button onclick="app.closeRewardAndHome()" class="btn-3d bg-slate-100 hover:bg-slate-200 text-slate-700 border-2 border-slate-300 font-bold px-4 py-3 rounded-2xl text-sm">
+                    🏠 منو
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         JAVASCRIPT ENGINE & ALL 4 GAMES
+    =========================================== -->
+    <script>
+        /* ----------------------------------------------------
+         * PERSIAN NUMERAL CONVERTER UTILITY
+         * Ensures every number displayed is in Persian digits (۰-۹)
+         * ---------------------------------------------------- */
+        const toFa = (num) => {
+            if (num === null || num === undefined) return '';
+            const faDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+            return String(num).replace(/\d/g, d => faDigits[d]);
+        };
+
+        const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+        /* ----------------------------------------------------
+         * WEB AUDIO SYNTHESIZER (Gentle, Kid-Friendly Sounds)
+         * ---------------------------------------------------- */
+        const soundFX = {
+            ctx: null,
+            muted: false,
+
+            init() {
+                if (!this.ctx) {
+                    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                    if (AudioCtx) this.ctx = new AudioCtx();
+                }
+                if (this.ctx && this.ctx.state === 'suspended') {
+                    this.ctx.resume();
+                }
+            },
+
+            toggleMute() {
+                this.muted = !this.muted;
+                document.getElementById('btnSound').textContent = this.muted ? '🔇' : '🔊';
+                if (!this.muted) this.playPop();
+            },
+
+            playTone(freq, type = 'sine', duration = 0.15, delay = 0, vol = 0.12) {
+                if (this.muted) return;
+                try {
+                    this.init();
+                    if (!this.ctx) return;
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = type;
+                    osc.frequency.setValueAtTime(freq, this.ctx.currentTime + delay);
+
+                    gain.gain.setValueAtTime(0.001, this.ctx.currentTime + delay);
+                    gain.gain.exponentialRampToValueAtTime(vol, this.ctx.currentTime + delay + 0.02);
+                    gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + delay + duration);
+
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+
+                    osc.start(this.ctx.currentTime + delay);
+                    osc.stop(this.ctx.currentTime + delay + duration + 0.02);
+                } catch (e) {}
+            },
+
+            playPop() {
+                this.playTone(520, 'sine', 0.1, 0, 0.1);
+            },
+
+            playPlant() {
+                this.playTone(440, 'triangle', 0.1, 0, 0.1);
+                this.playTone(660, 'sine', 0.12, 0.06, 0.1);
+            },
+
+            playLaser() {
+                if (this.muted) return;
+                try {
+                    this.init();
+                    if (!this.ctx) return;
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(880, this.ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(180, this.ctx.currentTime + 0.22);
+                    gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.22);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start();
+                    osc.stop(this.ctx.currentTime + 0.24);
+                } catch (e) {}
+            },
+
+            playSuccess() {
+                // Happy major arpeggio
+                const notes = [523.25, 659.25, 783.99, 1046.50];
+                notes.forEach((n, idx) => {
+                    this.playTone(n, 'triangle', 0.22, idx * 0.09, 0.14);
+                });
+            },
+
+            playGentleGuide() {
+                // Soft comforting two-note chime when mistake happens
+                this.playTone(392.00, 'sine', 0.2, 0, 0.1);
+                this.playTone(349.23, 'sine', 0.3, 0.15, 0.1);
+            }
+        };
+
+        /* ----------------------------------------------------
+         * CUTE CAT GUIDE (پیشی دانا) CONTROLLER
+         * ---------------------------------------------------- */
+        const catGuide = {
+            say(text, mood = 'happy') {
+                const speechEl = document.getElementById('catSpeechText');
+                speechEl.innerHTML = text;
+                this.setMood(mood);
+            },
+
+            setMood(mood) {
+                const eyes = document.getElementById('catEyes');
+                const mouth = document.getElementById('catMouth');
+                if (!eyes || !mouth) return;
+
+                if (mood === 'cheer') {
+                    // Happy closed arc eyes & big open smile
+                    eyes.innerHTML = `
+                        <path d="M29,48 Q35,40 41,48" fill="none" stroke="#1e293b" stroke-width="3.5" stroke-linecap="round"/>
+                        <path d="M59,48 Q65,40 71,48" fill="none" stroke="#1e293b" stroke-width="3.5" stroke-linecap="round"/>
+                    `;
+                    mouth.innerHTML = `
+                        <path d="M42,59 Q50,72 58,59 Z" fill="#f43f5e" stroke="#9a3412" stroke-width="2.5"/>
+                    `;
+                } else if (mood === 'thinking') {
+                    // Curious eyes & little 'o' mouth
+                    eyes.innerHTML = `
+                        <circle cx="35" cy="47" r="5.5" fill="#1e293b"/>
+                        <circle cx="36.5" cy="45" r="2" fill="#ffffff"/>
+                        <circle cx="65" cy="47" r="5.5" fill="#1e293b"/>
+                        <circle cx="66.5" cy="45" r="2" fill="#ffffff"/>
+                    `;
+                    mouth.innerHTML = `
+                        <circle cx="50" cy="63" r="3.5" fill="#9a3412"/>
+                    `;
+                } else {
+                    // Default friendly smile
+                    eyes.innerHTML = `
+                        <circle cx="35" cy="48" r="5.5" fill="#1e293b"/>
+                        <circle cx="33.5" cy="46" r="2" fill="#ffffff"/>
+                        <circle cx="65" cy="48" r="5.5" fill="#1e293b"/>
+                        <circle cx="63.5" cy="46" r="2" fill="#ffffff"/>
+                    `;
+                    mouth.innerHTML = `
+                        <path d="M43,61 Q50,67 50,58 Q50,67 57,61" fill="none" stroke="#9a3412" stroke-width="2.8" stroke-linecap="round"/>
+                    `;
+                }
+            },
+
+            poke() {
+                soundFX.playPop();
+                const messages = [
+                    'میو! من پیشی دانا هستم، هر جا کمک خواستی حواسم بهت هست! 🐾',
+                    'تو فوق‌العاده‌ای! با تمرین، قهرمان جدول ضرب و تقسیم می‌شی! 🌟',
+                    'یادت باشه اشتباه کردن بخشی از یادگیریه، با شکل‌ها همه چیز آسون می‌شه! 🍎',
+                    'بزن بریم ستاره‌های بیشتری جمع کنیم! ⭐'
+                ];
+                this.say(messages[randInt(0, messages.length - 1)], 'cheer');
+            }
+        };
+
+        /* ----------------------------------------------------
+         * MAIN APPLICATION STATE & NAVIGATION
+         * ---------------------------------------------------- */
+        const app = {
+            currentGame: null, // 'garden', 'cookies', 'space', 'shop'
+            difficulty: 'easy', // 'easy', 'medium', 'hard', 'veryhard'
+            totalStars: 0,
+            totalScore: 0,
+            mistakesThisRound: 0,
+            pendingGameSelection: null,
+
+            diffLabels: {
+                easy: 'آسان 🌱',
+                medium: 'متوسط 🌼',
+                hard: 'سخت 🔥',
+                veryhard: 'خیلی سخت 👑'
+            },
+
+            gameTitles: {
+                garden: '🍎 باغ ضرب',
+                cookies: '🍪 بیسکویت‌های عادلانه',
+                space: '🚀 فضانورد جدول ضرب',
+                shop: '🏪 مغازه‌دار کوچولو'
+            },
+
+            init() {
+                // Load saved score/stars if available
+                try {
+                    const savedStars = localStorage.getItem('pishi_math_stars');
+                    const savedScore = localStorage.getItem('pishi_math_score');
+                    if (savedStars) this.totalStars = parseInt(savedStars, 10) || 0;
+                    if (savedScore) this.totalScore = parseInt(savedScore, 10) || 0;
+                } catch (e) {}
+                this.updateTopCounters();
+            },
+
+            updateTopCounters() {
+                document.getElementById('totalStarsDisplay').textContent = toFa(this.totalStars);
+                document.getElementById('totalScoreDisplay').textContent = toFa(this.totalScore);
+                try {
+                    localStorage.setItem('pishi_math_stars', this.totalStars);
+                    localStorage.setItem('pishi_math_score', this.totalScore);
+                } catch (e) {}
+            },
+
+            resetRoundMistakes() {
+                this.mistakesThisRound = 0;
+                this.updateRoundStarsPreview();
+            },
+
+            recordMistake() {
+                this.mistakesThisRound++;
+                this.updateRoundStarsPreview();
+            },
+
+            getEarnedStars() {
+                if (this.mistakesThisRound === 0) return 3;
+                if (this.mistakesThisRound === 1) return 2;
+                return 1;
+            },
+
+            updateRoundStarsPreview() {
+                const stars = this.getEarnedStars();
+                document.getElementById('roundStarsPreview').textContent = '⭐'.repeat(stars) + '☆'.repeat(3 - stars);
+            },
+
+            selectGame(gameKey) {
+                soundFX.playPop();
+                this.pendingGameSelection = gameKey;
+                this.openDifficultyModal();
+            },
+
+            openDifficultyModal() {
+                soundFX.playPop();
+                document.getElementById('modalDifficulty').classList.remove('hidden');
+            },
+
+            closeDifficultyModal() {
+                document.getElementById('modalDifficulty').classList.add('hidden');
+            },
+
+            setDifficulty(diff) {
+                soundFX.playPop();
+                this.difficulty = diff;
+                document.getElementById('currentDiffBadge').textContent = this.diffLabels[diff];
+                this.closeDifficultyModal();
+
+                if (this.pendingGameSelection) {
+                    this.launchGame(this.pendingGameSelection);
+                    this.pendingGameSelection = null;
+                } else if (this.currentGame) {
+                    // Restart current game with new difficulty
+                    this.launchGame(this.currentGame);
+                }
+            },
+
+            launchGame(gameKey) {
+                spaceGame.stopLoop();
+                this.currentGame = gameKey;
+
+                // Hide all views
+                ['viewMenu', 'viewGarden', 'viewCookies', 'viewSpace', 'viewShop'].forEach(id => {
+                    document.getElementById(id).classList.add('hidden');
+                });
+
+                // Show navigation controls
+                document.getElementById('btnHome').classList.remove('hidden');
+                document.getElementById('gameSubHeader').classList.remove('hidden');
+                document.getElementById('currentGameBadge').textContent = this.gameTitles[gameKey];
+                document.getElementById('currentDiffBadge').textContent = this.diffLabels[this.difficulty];
+
+                if (gameKey === 'garden') {
+                    document.getElementById('viewGarden').classList.remove('hidden');
+                    gardenGame.startNewRound();
+                } else if (gameKey === 'cookies') {
+                    document.getElementById('viewCookies').classList.remove('hidden');
+                    cookieGame.startNewRound();
+                } else if (gameKey === 'space') {
+                    document.getElementById('viewSpace').classList.remove('hidden');
+                    spaceGame.startGame();
+                } else if (gameKey === 'shop') {
+                    document.getElementById('viewShop').classList.remove('hidden');
+                    shopGame.startNewRound();
+                }
+            },
+
+            goHome() {
+                soundFX.playPop();
+                spaceGame.stopLoop();
+                this.currentGame = null;
+                ['viewGarden', 'viewCookies', 'viewSpace', 'viewShop'].forEach(id => {
+                    document.getElementById(id).classList.add('hidden');
+                });
+                document.getElementById('viewMenu').classList.remove('hidden');
+                document.getElementById('btnHome').classList.add('hidden');
+                document.getElementById('gameSubHeader').classList.add('hidden');
+                catGuide.say('کدوم بازی رو دوست داری الان امتحان کنیم؟ روی کارت دلخواهت بزن! 🐾', 'happy');
+            },
+
+            showRewardModal(customMessage) {
+                soundFX.playSuccess();
+                const stars = this.getEarnedStars();
+                const points = stars * 10;
+                this.totalStars += stars;
+                this.totalScore += points;
+                this.updateTopCounters();
+
+                document.getElementById('rewardStarsContainer').textContent = '⭐'.repeat(stars);
+                document.getElementById('rewardPointsText').textContent = `+${toFa(points)}`;
+
+                if (stars === 3) {
+                    document.getElementById('rewardTitle').textContent = 'فوق‌العاده بود قهرمان! 🎉';
+                    document.getElementById('rewardDesc').textContent = customMessage || 'بدون حتی یک خطا جواب درست رو پیدا کردی و هر ۳ ستاره رو گرفتی!';
+                } else if (stars === 2) {
+                    document.getElementById('rewardTitle').textContent = 'آفرین، خیلی خوب بود! 👏';
+                    document.getElementById('rewardDesc').textContent = customMessage || 'با تلاش و دقت جواب درست رو یاد گرفتی و ۲ ستاره درخشان گرفتی!';
+                } else {
+                    document.getElementById('rewardTitle').textContent = 'آفرین که تسلیم نشدی! 💪';
+                    document.getElementById('rewardDesc').textContent = customMessage || 'تمرین باعث می‌شه هر بار قوی‌تر بشی. ۱ ستاره جایزه گرفتی!';
+                }
+
+                catGuide.say('هورااا! خیلی بهت افتخار می‌کنم! 🌟😺', 'cheer');
+                document.getElementById('modalReward').classList.remove('hidden');
+            },
+
+            nextQuestion() {
+                soundFX.playPop();
+                document.getElementById('modalReward').classList.add('hidden');
+                if (this.currentGame === 'garden') gardenGame.startNewRound();
+                else if (this.currentGame === 'cookies') cookieGame.startNewRound();
+                else if (this.currentGame === 'space') spaceGame.startGame();
+                else if (this.currentGame === 'shop') shopGame.startNewRound();
+            },
+
+            closeRewardAndHome() {
+                document.getElementById('modalReward').classList.add('hidden');
+                this.goHome();
+            },
+
+            showVisualExplanation(subtitle, diagramHtml, conclusionHtml) {
+                soundFX.playGentleGuide();
+                catGuide.say('بیا با هم شکلش رو نگاه کنیم تا قشنگ یاد بگیریم! 🐾💡', 'thinking');
+                document.getElementById('visualHelpSubtitle').innerHTML = subtitle;
+                document.getElementById('visualHelpDiagram').innerHTML = diagramHtml;
+                document.getElementById('visualHelpConclusion').innerHTML = conclusionHtml;
+                document.getElementById('modalVisualHelp').classList.remove('hidden');
+            },
+
+            closeVisualHelpModal() {
+                soundFX.playPop();
+                document.getElementById('modalVisualHelp').classList.add('hidden');
+                if (this.currentGame === 'space') {
+                    spaceGame.resumeAfterExplanation();
+                }
+            },
+
+            getFactorRange() {
+                switch (this.difficulty) {
+                    case 'easy': return [1, 4];
+                    case 'medium': return [2, 6];
+                    case 'hard': return [4, 9];
+                    case 'veryhard': return [6, 11];
+                    default: return [1, 4];
+                }
+            }
+        };
+
+        /* ----------------------------------------------------
+         * GAME 1: MULTIPLICATION GARDEN (باغ ضرب)
+         * ---------------------------------------------------- */
+        const gardenGame = {
+            rows: 3,
+            cols: 4,
+            gridState: [],
+            fruits: ['🍎', '🍐', '🍊', '🍓', '🍑'],
+            currentFruit: '🍎',
+            fruitNames: {
+                '🍎': 'سیب',
+                '🍐': 'گلابی',
+                '🍊': 'پرتقال',
+                '🍓': 'توت‌فرنگی',
+                '🍑': 'هلو'
+            },
+
+            startNewRound() {
+                app.resetRoundMistakes();
+                const [minF, maxF] = app.getFactorRange();
+                // Keep grid visual size comfortable on mobile screens (max 9x9 or 10x10)
+                const cappedMax = Math.min(maxF, 9);
+                this.rows = randInt(minF, cappedMax);
+                this.cols = randInt(minF, cappedMax);
+                this.currentFruit = this.fruits[randInt(0, this.fruits.length - 1)];
+                const fName = this.fruitNames[this.currentFruit];
+
+                this.gridState = Array.from({ length: this.rows }, () => Array(this.cols).fill(false));
+
+                document.getElementById('gardenPromptText').innerHTML =
+                    `<span class="text-rose-600">${toFa(this.rows)} ردیف</span> ${fName} بچین که در هر ردیف <span class="text-indigo-600">${toFa(this.cols)} تا</span> ${fName} باشد!`;
+                document.getElementById('gardenNumRows').textContent = toFa(this.rows);
+                document.getElementById('gardenNumCols').textContent = toFa(this.cols);
+                document.getElementById('gardenFormulaAns').textContent = '؟';
+
+                catGuide.say(
+                    `توی باغچه ${toFa(this.rows)} ردیف داریم و هر ردیف ${toFa(this.cols)} تا جا داره. روی خانه‌ها یا دکمه «کاشتن یک ردیف» بزن و بشمار! 🌱`,
+                    'happy'
+                );
+
+                this.renderGrid();
+                this.renderChoices();
+            },
+
+            renderGrid() {
+                const container = document.getElementById('gardenGridContainer');
+                container.innerHTML = '';
+                let plantedTotal = 0;
+
+                for (let r = 0; r < this.rows; r++) {
+                    const rowEl = document.createElement('div');
+                    rowEl.className = 'flex items-center gap-1.5 sm:gap-2 bg-amber-950/15 px-2.5 py-1.5 rounded-2xl border border-amber-800/20';
+
+                    // Row label button (toggles entire row)
+                    const rowLabel = document.createElement('button');
+                    rowLabel.className = 'text-xs sm:text-sm font-black bg-emerald-100 hover:bg-emerald-200 text-emerald-900 px-2.5 py-1 rounded-xl border border-emerald-300 flex-shrink-0 transition';
+                    rowLabel.textContent = `ردیف ${toFa(r + 1)}`;
+                    rowLabel.onclick = () => this.toggleRow(r);
+                    rowEl.appendChild(rowLabel);
+
+                    // Cells in this row
+                    for (let c = 0; c < this.cols; c++) {
+                        const isPlanted = this.gridState[r][c];
+                        if (isPlanted) plantedTotal++;
+
+                        const cellBtn = document.createElement('button');
+                        // Size dynamically adapts for larger grids
+                        const sizeClass = (this.cols > 6 || this.rows > 6)
+                            ? 'w-9 h-9 sm:w-11 sm:h-11 text-xl sm:text-2xl'
+                            : 'w-11 h-11 sm:w-14 sm:h-14 text-2xl sm:text-3xl';
+
+                        cellBtn.className = `${sizeClass} rounded-2xl border-2 flex items-center justify-center transition-all transform ${
+                            isPlanted
+                                ? 'bg-emerald-100 border-emerald-400 scale-100 shadow-sm'
+                                : 'bg-amber-100/70 hover:bg-amber-200/80 border-amber-300/80 scale-95'
+                        }`;
+                        cellBtn.innerHTML = isPlanted ? `<span class="animate-pop">${this.currentFruit}</span>` : '<span class="opacity-25 text-xs">🌱</span>';
+                        cellBtn.onclick = () => {
+                            soundFX.playPlant();
+                            this.gridState[r][c] = !this.gridState[r][c];
+                            this.renderGrid();
+                        };
+                        rowEl.appendChild(cellBtn);
+                    }
+
+                    // Row cumulative counter badge
+                    const rowPlantedCount = this.gridState[r].filter(Boolean).length;
+                    const sumBadge = document.createElement('span');
+                    sumBadge.className = 'text-xs font-black text-amber-900 bg-white/80 px-2 py-0.5 rounded-lg min-w-[28px] text-center';
+                    sumBadge.textContent = toFa(rowPlantedCount);
+                    rowEl.appendChild(sumBadge);
+
+                    container.appendChild(rowEl);
+                }
+
+                document.getElementById('gardenPlantedCount').textContent = toFa(plantedTotal);
+            },
+
+            toggleRow(r) {
+                soundFX.playPlant();
+                const allPlanted = this.gridState[r].every(Boolean);
+                this.gridState[r] = this.gridState[r].map(() => !allPlanted);
+                this.renderGrid();
+            },
+
+            plantNextRow() {
+                soundFX.playPlant();
+                for (let r = 0; r < this.rows; r++) {
+                    if (!this.gridState[r].every(Boolean)) {
+                        this.gridState[r].fill(true);
+                        this.renderGrid();
+                        const plantedSoFar = this.gridState.flat().filter(Boolean).length;
+                        catGuide.say(`ردیف ${toFa(r + 1)} کامل شد! تا الان ${toFa(plantedSoFar)} تا ${this.fruitNames[this.currentFruit]} داریم! 🍎`, 'happy');
+                        return;
+                    }
+                }
+                catGuide.say(`همه ${toFa(this.rows)} ردیف کاشته شدن! حالا تعداد کل رو از پایین انتخاب کن. 🌟`, 'cheer');
+            },
+
+            plantAll() {
+                soundFX.playPlant();
+                this.gridState.forEach(row => row.fill(true));
+                this.renderGrid();
+            },
+
+            clearGrid() {
+                soundFX.playPop();
+                this.gridState.forEach(row => row.fill(false));
+                this.renderGrid();
+            },
+
+            renderChoices() {
+                const correct = this.rows * this.cols;
+                const choicesSet = new Set([correct]);
+                while (choicesSet.size < 4) {
+                    const offset = randInt(-5, 6);
+                    let cand = correct + offset;
+                    if (cand <= 0 || cand === correct) cand = correct + choicesSet.size * 2;
+                    choicesSet.add(cand);
+                }
+                const choices = Array.from(choicesSet).sort((a, b) => a - b);
+
+                const container = document.getElementById('gardenChoices');
+                container.innerHTML = '';
+                choices.forEach(val => {
+                    const btn = document.createElement('button');
+                    btn.className = 'btn-3d btn-3d-emerald bg-emerald-500 hover:bg-emerald-600 text-white font-black text-2xl sm:text-3xl py-3 rounded-2xl shadow-md';
+                    btn.textContent = toFa(val);
+                    btn.onclick = () => this.checkAnswer(val);
+                    container.appendChild(btn);
+                });
+            },
+
+            checkAnswer(selected) {
+                const correct = this.rows * this.cols;
+                const fName = this.fruitNames[this.currentFruit];
+
+                if (selected === correct) {
+                    this.plantAll();
+                    document.getElementById('gardenFormulaAns').textContent = toFa(correct);
+                    app.showRewardModal(`آفرین! ${toFa(this.rows)} ردیف ${toFa(this.cols)} تایی از ${fName} دقیقاً می‌شه ${toFa(correct)} تا!`);
+                } else {
+                    app.recordMistake();
+                    // Build visual row-by-row explanation diagram
+                    let rowsHtml = '<div class="flex flex-col gap-2 items-center w-full">';
+                    for (let r = 1; r <= this.rows; r++) {
+                        rowsHtml += `
+                            <div class="flex items-center justify-between gap-3 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-xl w-full max-w-xs">
+                                <span class="text-xs font-bold text-emerald-800">ردیف ${toFa(r)}:</span>
+                                <span class="text-lg tracking-widest">${this.currentFruit.repeat(this.cols)}</span>
+                                <span class="text-xs font-black bg-emerald-200 text-emerald-900 px-2 py-0.5 rounded-lg">تا اینجا: ${toFa(r * this.cols)}</span>
+                            </div>
+                        `;
+                    }
+                    rowsHtml += '</div>';
+
+                    const additionChain = Array(this.rows).fill(toFa(this.cols)).join(' + ');
+                    app.showVisualExplanation(
+                        `تو عدد ${toFa(selected)} رو زدی، اما بیا ${toFa(this.rows)} ردیف ${toFa(this.cols)} تایی رو با هم بشماریم:`,
+                        rowsHtml,
+                        `جمع ردیف‌ها: ${additionChain} = <span class="text-2xl text-rose-600">${toFa(correct)}</span><br>پس ${toFa(this.rows)} × ${toFa(this.cols)} می‌شود ${toFa(correct)}!`
+                    );
+                }
+            }
+        };
+
+        /* ----------------------------------------------------
+         * GAME 2: FAIR COOKIES (بیسکویت‌های عادلانه - تقسیم)
+         * ---------------------------------------------------- */
+        const cookieGame = {
+            totalCookies: 12,
+            numFriends: 4,
+            plates: [],
+            userQuotient: 0,
+            userRemainder: 0,
+            friendNames: ['تینا', 'آرش', 'نیما', 'سارا', 'پویا', 'مریم'],
+
+            startNewRound() {
+                app.resetRoundMistakes();
+
+                // Configure numbers based on difficulty
+                if (app.difficulty === 'easy') {
+                    this.numFriends = randInt(2, 3);
+                    const q = randInt(1, 4);
+                    this.totalCookies = this.numFriends * q;
+                } else if (app.difficulty === 'medium') {
+                    this.numFriends = randInt(2, 4);
+                    const q = randInt(2, 5);
+                    const rem = Math.random() < 0.35 ? randInt(1, this.numFriends - 1) : 0;
+                    this.totalCookies = this.numFriends * q + rem;
+                } else if (app.difficulty === 'hard') {
+                    this.numFriends = randInt(3, 5);
+                    const q = randInt(2, 5);
+                    const rem = randInt(1, this.numFriends - 1);
+                    this.totalCookies = this.numFriends * q + rem;
+                } else {
+                    // veryhard
+                    this.numFriends = randInt(3, 6);
+                    const q = randInt(3, 6);
+                    const rem = randInt(1, this.numFriends - 1);
+                    this.totalCookies = this.numFriends * q + rem;
+                }
+
+                this.plates = Array(this.numFriends).fill(0);
+                this.userQuotient = 0;
+                this.userRemainder = 0;
+
+                document.getElementById('cookiePromptText').innerHTML =
+                    `<span class="text-rose-600">${toFa(this.totalCookies)} کلوچه</span> روی میز داریم و <span class="text-indigo-600">${toFa(this.numFriends)} دوست</span> منتظرند. کلوچه‌ها را عادلانه پخش کن!`;
+                document.getElementById('cookieTotalNum').textContent = toFa(this.totalCookies);
+                document.getElementById('cookieFriendsNum').textContent = toFa(this.numFriends);
+
+                catGuide.say(
+                    `بیا ${toFa(this.totalCookies)} تا کلوچه رو بین ${toFa(this.numFriends)} تا دوست طوری پخش کنیم که به همه به یک اندازه برسه و کسی ناراحت نشه! 🍪`,
+                    'happy'
+                );
+
+                this.renderAll();
+            },
+
+            getRemainingInTray() {
+                const used = this.plates.reduce((a, b) => a + b, 0);
+                return this.totalCookies - used;
+            },
+
+            addCookieToPlate(idx) {
+                if (this.getRemainingInTray() > 0) {
+                    soundFX.playPop();
+                    this.plates[idx]++;
+                    this.syncInputsWithPlates();
+                    this.renderAll();
+                } else {
+                    soundFX.playGentleGuide();
+                    catGuide.say('سینی کلوچه‌ها خالی شده! اگر می‌خوای جابه‌جا کنی، روی کلوچه داخل بشقاب بزن تا برگرده توی سینی. 🍪', 'thinking');
+                }
+            },
+
+            removeCookieFromPlate(idx, e) {
+                if (e) e.stopPropagation();
+                if (this.plates[idx] > 0) {
+                    soundFX.playPop();
+                    this.plates[idx]--;
+                    this.syncInputsWithPlates();
+                    this.renderAll();
+                }
+            },
+
+            dealOneRound() {
+                const rem = this.getRemainingInTray();
+                if (rem >= this.numFriends) {
+                    soundFX.playPlant();
+                    for (let i = 0; i < this.numFriends; i++) {
+                        this.plates[i]++;
+                    }
+                    this.syncInputsWithPlates();
+                    this.renderAll();
+                } else {
+                    soundFX.playGentleGuide();
+                    catGuide.say(`فقط ${toFa(rem)} کلوچه توی سینی مونده که به همه ${toFa(this.numFriends)} نفر نمی‌رسه! پس این‌ها می‌شن «باقی‌مانده»! 💡`, 'thinking');
+                }
+            },
+
+            resetPlates() {
+                soundFX.playPop();
+                this.plates.fill(0);
+                this.userQuotient = 0;
+                this.userRemainder = this.totalCookies;
+                this.renderAll();
+            },
+
+            syncInputsWithPlates() {
+                // If all plates are equal, auto-fill userQuotient & userRemainder to make interaction super smooth
+                const first = this.plates[0];
+                const allEqual = this.plates.every(c => c === first);
+                if (allEqual) {
+                    this.userQuotient = first;
+                    this.userRemainder = this.getRemainingInTray();
+                }
+            },
+
+            adjustInput(type, delta) {
+                soundFX.playPop();
+                if (type === 'quotient') {
+                    this.userQuotient = Math.max(0, Math.min(20, this.userQuotient + delta));
+                } else {
+                    this.userRemainder = Math.max(0, Math.min(20, this.userRemainder + delta));
+                }
+                document.getElementById('inputQuotientDisplay').textContent = toFa(this.userQuotient);
+                document.getElementById('inputRemainderDisplay').textContent = toFa(this.userRemainder);
+            },
+
+            renderAll() {
+                const rem = this.getRemainingInTray();
+                document.getElementById('trayRemainingCount').textContent = toFa(rem);
+
+                // Render Tray Cookies
+                const trayEl = document.getElementById('cookieTrayContainer');
+                trayEl.innerHTML = '';
+                if (rem === 0) {
+                    trayEl.innerHTML = '<span class="text-xs text-slate-400 font-bold">همه کلوچه‌ها پخش شدند! ✨</span>';
+                } else {
+                    for (let i = 0; i < rem; i++) {
+                        const cSpan = document.createElement('span');
+                        cSpan.className = 'text-2xl sm:text-3xl animate-pop inline-block cursor-pointer hover:scale-110 transition';
+                        cSpan.textContent = '🍪';
+                        cSpan.title = 'کلوچه در سینی';
+                        trayEl.appendChild(cSpan);
+                    }
+                }
+
+                // Check fairness across plates
+                const first = this.plates[0];
+                const isEqual = this.plates.every(c => c === first);
+                const maxVal = Math.max(...this.plates);
+
+                // Render Friends & Plates
+                const gridEl = document.getElementById('friendsPlatesGrid');
+                gridEl.innerHTML = '';
+
+                for (let i = 0; i < this.numFriends; i++) {
+                    const count = this.plates[i];
+                    let faceEmoji = '😐';
+                    let moodText = 'منتظر کلوچه...';
+                    let borderClass = 'border-slate-300 bg-white';
+
+                    if (count === 0 && maxVal === 0) {
+                        faceEmoji = '🙂';
+                        moodText = 'منتظر...';
+                    } else if (isEqual && count > 0) {
+                        faceEmoji = '😄';
+                        moodText = 'خوشحال و راضی!';
+                        borderClass = 'border-emerald-400 bg-emerald-50/60';
+                    } else if (count < maxVal) {
+                        faceEmoji = '😟';
+                        moodText = 'واسه من کمتره!';
+                        borderClass = 'border-rose-300 bg-rose-50/50';
+                    } else {
+                        faceEmoji = '😮';
+                        moodText = 'برابری رعایت نشده!';
+                        borderClass = 'border-amber-300 bg-amber-50/50';
+                    }
+
+                    const card = document.createElement('div');
+                    card.className = `border-2 ${borderClass} rounded-2xl p-2.5 flex flex-col items-center justify-between cursor-pointer hover:shadow-md transition`;
+                    card.onclick = () => this.addCookieToPlate(i);
+
+                    let cookiesHtml = '';
+                    for (let k = 0; k < count; k++) {
+                        cookiesHtml += `<button onclick="cookieGame.removeCookieFromPlate(${i}, event)" class="text-xl sm:text-2xl hover:scale-125 transition" title="برگرداندن به سینی">🍪</button>`;
+                    }
+                    if (count === 0) {
+                        cookiesHtml = '<span class="text-xs text-slate-400">بشقاب خالی (لمس کن)</span>';
+                    }
+
+                    card.innerHTML = `
+                        <div class="flex items-center justify-between w-full px-1 mb-1">
+                            <span class="text-xs font-black text-slate-700">${this.friendNames[i]}</span>
+                            <span class="text-xs font-bold text-slate-500">${moodText}</span>
+                        </div>
+                        <div class="text-3xl sm:text-4xl my-0.5">${faceEmoji}</div>
+                        <div class="w-full min-h-[48px] bg-white border-2 border-amber-200 rounded-full px-2 py-1 my-1 flex flex-wrap items-center justify-center gap-1 shadow-inner">
+                            ${cookiesHtml}
+                        </div>
+                        <span class="text-xs font-black bg-amber-100 text-amber-900 px-2.5 py-0.5 rounded-full">
+                            ${toFa(count)} کلوچه
+                        </span>
+                    `;
+                    gridEl.appendChild(card);
+                }
+
+                // Update Fairness Banner
+                const banner = document.getElementById('fairnessStatusBanner');
+                if (isEqual && first > 0 && rem < this.numFriends) {
+                    banner.className = 'mt-2 px-4 py-1.5 rounded-full text-xs sm:text-sm font-black bg-emerald-100 text-emerald-900 border border-emerald-400 flex items-center gap-2';
+                    banner.innerHTML = `<span>🎉 آفرین! همه دوست‌ها دقیقاً ${toFa(first)} کلوچه دارند و ${toFa(rem)} کلوچه باقی مانده است.</span>`;
+                } else if (!isEqual) {
+                    banner.className = 'mt-2 px-4 py-1.5 rounded-full text-xs sm:text-sm font-black bg-rose-100 text-rose-900 border border-rose-300 flex items-center gap-2';
+                    banner.innerHTML = `<span>😟 هنوز کلوچه‌های داخل بشقاب‌ها مساوی نیستند! دوست‌ها دوست دارن سهمشون برابر باشه.</span>`;
+                } else {
+                    banner.className = 'mt-2 px-4 py-1.5 rounded-full text-xs sm:text-sm font-black bg-amber-100 text-amber-900 border border-amber-300 flex items-center gap-2';
+                    banner.innerHTML = `<span>🍪 هنوز می‌تونی کلوچه‌های توی سینی رو بین دوست‌ها پخش کنی!</span>`;
+                }
+
+                // Update bottom selector displays
+                document.getElementById('inputQuotientDisplay').textContent = toFa(this.userQuotient);
+                document.getElementById('inputRemainderDisplay').textContent = toFa(this.userRemainder);
+            },
+
+            checkAnswer() {
+                const correctQ = Math.floor(this.totalCookies / this.numFriends);
+                const correctR = this.totalCookies % this.numFriends;
+
+                if (this.userQuotient === correctQ && this.userRemainder === correctR) {
+                    // Auto-arrange plates to match perfect distribution
+                    this.plates.fill(correctQ);
+                    this.renderAll();
+                    const remMsg = correctR > 0 ? ` و ${toFa(correctR)} کلوچه هم باقی ماند` : ' و هیچ کلوچه‌ای اضافه نماند';
+                    app.showRewardModal(`تقسیم عادلانه عالی! به هر کدام از ${toFa(this.numFriends)} دوست ${toFa(correctQ)} کلوچه رسید${remMsg}!`);
+                } else {
+                    app.recordMistake();
+
+                    // Build visual explanation of equal sharing
+                    let platesDiagram = '<div class="grid grid-cols-2 sm:grid-cols-3 gap-2 w-full mb-2">';
+                    for (let i = 0; i < this.numFriends; i++) {
+                        platesDiagram += `
+                            <div class="bg-amber-50 border border-amber-300 rounded-xl p-2 flex flex-col items-center">
+                                <span class="text-xs font-bold text-amber-900">😄 ${this.friendNames[i]}</span>
+                                <span class="text-lg my-1">${'🍪'.repeat(correctQ)}</span>
+                                <span class="text-xs font-black text-emerald-800">${toFa(correctQ)} عدد</span>
+                            </div>
+                        `;
+                    }
+                    platesDiagram += '</div>';
+
+                    if (correctR > 0) {
+                        platesDiagram += `
+                            <div class="bg-purple-100 border border-purple-300 rounded-xl px-3 py-1.5 text-xs sm:text-sm font-black text-purple-900">
+                                🍪 باقی‌مانده در سینی (که به همه ${toFa(this.numFriends)} نفر نمی‌رسد): ${'🍪'.repeat(correctR)} (${toFa(correctR)} عدد)
+                            </div>
+                        `;
+                    }
+
+                    app.showVisualExplanation(
+                        `وقتی ${toFa(this.totalCookies)} کلوچه را بین ${toFa(this.numFriends)} دوست مساوی تقسیم کنیم:`,
+                        platesDiagram,
+                        `سهم هر دوست <span class="text-2xl text-emerald-700">${toFa(correctQ)}</span> کلوچه و باقی‌مانده <span class="text-2xl text-purple-700">${toFa(correctR)}</span> کلوچه است!`
+                    );
+                }
+            }
+        };
+
+        /* ----------------------------------------------------
+         * GAME 3: MULTIPLICATION ASTRONAUT (فضانورد جدول ضرب)
+         * ---------------------------------------------------- */
+        const spaceGame = {
+            a: 3,
+            b: 4,
+            meteorY: 10,
+            baseSpeed: 0.55,
+            speedMultiplier: 1.0,
+            animFrame: null,
+            paused: false,
+            destroyedInWave: 0,
+            targetPerWave: 5,
+
+            startGame() {
+                this.stopLoop();
+                app.resetRoundMistakes();
+                this.destroyedInWave = 0;
+                this.updateWaveHUD();
+
+                // Set base speed by difficulty
+                if (app.difficulty === 'easy') this.baseSpeed = 0.42;
+                else if (app.difficulty === 'medium') this.baseSpeed = 0.58;
+                else if (app.difficulty === 'hard') this.baseSpeed = 0.78;
+                else this.baseSpeed = 1.0;
+
+                this.generateStarsBg();
+                catGuide.say('شهاب‌سنگ‌ها دارن می‌آن! جواب ضرب روی شهاب‌سنگ رو زود بزن تا با لیزر بترکونیمش! 🚀✨', 'happy');
+                this.spawnMeteor();
+                this.paused = false;
+                this.loop();
+            },
+
+            generateStarsBg() {
+                const bg = document.getElementById('spaceStarsBg');
+                bg.innerHTML = '';
+                for (let i = 0; i < 28; i++) {
+                    const star = document.createElement('div');
+                    const size = randInt(2, 4);
+                    star.style.width = `${size}px`;
+                    star.style.height = `${size}px`;
+                    star.style.left = `${randInt(2, 96)}%`;
+                    star.style.top = `${randInt(2, 94)}%`;
+                    star.className = 'bg-white rounded-full absolute opacity-70 animate-pulse';
+                    bg.appendChild(star);
+                }
+            },
+
+            changeSpeed(delta) {
+                soundFX.playPop();
+                this.speedMultiplier = Math.max(0.5, Math.min(2.0, this.speedMultiplier + delta));
+                let label = 'معمولی';
+                if (this.speedMultiplier < 0.85) label = 'آرام 🐢';
+                else if (this.speedMultiplier > 1.2) label = 'تند 🚀';
+                document.getElementById('spaceSpeedBadge').textContent = label;
+            },
+
+            updateWaveHUD() {
+                document.getElementById('spaceWaveProgress').textContent =
+                    `${toFa(this.destroyedInWave)} از ${toFa(this.targetPerWave)}`;
+            },
+
+            spawnMeteor() {
+                const [minF, maxF] = app.getFactorRange();
+                this.a = randInt(minF, maxF);
+                this.b = randInt(minF, maxF);
+                this.meteorY = 8;
+
+                const meteorEl = document.getElementById('spaceMeteor');
+                meteorEl.style.top = `${this.meteorY}px`;
+                meteorEl.classList.remove('hidden');
+                document.getElementById('meteorEquationText').textContent = `${toFa(this.a)} × ${toFa(this.b)}`;
+
+                this.renderChoices();
+            },
+
+            renderChoices() {
+                const correct = this.a * this.b;
+                const set = new Set([correct]);
+                while (set.size < 4) {
+                    const cand = correct + randInt(-6, 7);
+                    if (cand > 0 && cand !== correct) set.add(cand);
+                    else set.add(correct + set.size * 3);
+                }
+                const choices = Array.from(set).sort((a, b) => a - b);
+
+                const grid = document.getElementById('spaceChoicesGrid');
+                grid.innerHTML = '';
+                choices.forEach(val => {
+                    const btn = document.createElement('button');
+                    btn.className = 'btn-3d btn-3d-indigo bg-indigo-600 hover:bg-indigo-500 text-amber-200 border-2 border-indigo-400 font-black text-2xl sm:text-3xl py-3 rounded-2xl shadow-lg';
+                    btn.textContent = toFa(val);
+                    btn.onclick = () => this.fireLaserAtMeteor(val);
+                    grid.appendChild(btn);
+                });
+            },
+
+            loop() {
+                if (!this.paused && app.currentGame === 'space') {
+                    const arena = document.getElementById('spaceArena');
+                    const maxHeight = arena ? (arena.clientHeight - 135) : 180;
+
+                    // Adaptive speed also scales slightly as player destroys more meteors
+                    const adaptiveBonus = 1 + (this.destroyedInWave * 0.05);
+                    this.meteorY += this.baseSpeed * this.speedMultiplier * adaptiveBonus;
+
+                    const meteorEl = document.getElementById('spaceMeteor');
+                    if (meteorEl) {
+                        meteorEl.style.top = `${this.meteorY}px`;
+                    }
+
+                    if (this.meteorY >= maxHeight) {
+                        this.handleMissOrWrong(null);
+                        return;
+                    }
+                }
+                if (app.currentGame === 'space') {
+                    this.animFrame = requestAnimationFrame(() => this.loop());
+                }
+            },
+
+            stopLoop() {
+                if (this.animFrame) {
+                    cancelAnimationFrame(this.animFrame);
+                    this.animFrame = null;
+                }
+            },
+
+            fireLaserAtMeteor(selectedVal) {
+                if (this.paused) return;
+                const correct = this.a * this.b;
+
+                if (selectedVal === correct) {
+                    this.paused = true;
+                    soundFX.playLaser();
+
+                    // Draw Laser Line in SVG
+                    const arena = document.getElementById('spaceArena');
+                    const svg = document.getElementById('spaceLaserSvg');
+                    const w = arena.clientWidth;
+                    const h = arena.clientHeight;
+                    svg.innerHTML = `
+                        <line x1="${w / 2}" y1="${h - 60}" x2="${w / 2}" y2="${this.meteorY + 45}"
+                              stroke="#38bdf8" stroke-linecap="round" class="laser-line" />
+                    `;
+
+                    // Show explosion
+                    const exp = document.getElementById('spaceExplosion');
+                    exp.style.left = `${w / 2}px`;
+                    exp.style.top = `${this.meteorY + 45}px`;
+                    exp.classList.remove('hidden');
+                    document.getElementById('spaceMeteor').classList.add('hidden');
+
+                    this.destroyedInWave++;
+                    this.updateWaveHUD();
+
+                    // Slightly speed up on success
+                    this.speedMultiplier = Math.min(1.8, this.speedMultiplier + 0.04);
+
+                    setTimeout(() => {
+                        exp.classList.add('hidden');
+                        svg.innerHTML = '';
+                        if (this.destroyedInWave >= this.targetPerWave) {
+                            app.showRewardModal(`فوق‌العاده بود کاپیتان! هر ${toFa(this.targetPerWave)} شهاب‌سنگ فضایی رو با موفقیت منهدم کردی!`);
+                        } else {
+                            catGuide.say(`بوووم! شلیک دقیق! ${toFa(this.a)} × ${toFa(this.b)} می‌شه ${toFa(correct)}! آماده شهاب‌سنگ بعدی باش! 🛸`, 'cheer');
+                            this.spawnMeteor();
+                            this.paused = false;
+                        }
+                    }, 500);
+                } else {
+                    // Slow down slightly if child makes a mistake so it stays encouraging
+                    this.speedMultiplier = Math.max(0.55, this.speedMultiplier - 0.12);
+                    this.handleMissOrWrong(selectedVal);
+                }
+            },
+
+            handleMissOrWrong(selectedVal) {
+                this.paused = true;
+                app.recordMistake();
+                const correct = this.a * this.b;
+
+                // Build visual star clusters for the multiplication
+                let clustersHtml = '<div class="flex flex-wrap items-center justify-center gap-2 max-w-md">';
+                for (let r = 1; r <= this.a; r++) {
+                    clustersHtml += `
+                        <div class="bg-indigo-950 text-amber-300 border border-indigo-500 rounded-xl px-2.5 py-1.5 flex flex-col items-center">
+                            <span class="text-[11px] text-indigo-200 mb-0.5">دسته ${toFa(r)}</span>
+                            <span class="text-sm sm:text-base tracking-widest">${'⭐'.repeat(this.b)}</span>
+                        </div>
+                    `;
+                }
+                clustersHtml += '</div>';
+
+                const subtitle = selectedVal === null
+                    ? `شهاب‌سنگ خیلی پایین اومد! بیا جواب ${toFa(this.a)} × ${toFa(this.b)} رو با ستاره‌ها ببینیم:`
+                    : `تو عدد ${toFa(selectedVal)} رو زدی، اما بیا ${toFa(this.a)} دسته ${toFa(this.b)} تایی از ستاره‌ها رو بشماریم:`;
+
+                app.showVisualExplanation(
+                    subtitle,
+                    clustersHtml,
+                    `${toFa(this.a)} دسته ${toFa(this.b)} تایی از ستاره‌ها می‌شود <span class="text-2xl text-rose-600">${toFa(correct)}</span>!<br>(${toFa(this.a)} × ${toFa(this.b)} = ${toFa(correct)})`
+                );
+            },
+
+            resumeAfterExplanation() {
+                this.meteorY = 10;
+                const meteorEl = document.getElementById('spaceMeteor');
+                if (meteorEl) meteorEl.style.top = '10px';
+                this.paused = false;
+            }
+        };
+
+        /* ----------------------------------------------------
+         * GAME 4: LITTLE SHOPKEEPER (مغازه‌دار کوچولو)
+         * ---------------------------------------------------- */
+        const shopGame = {
+            currentProblem: null,
+            itemsCatalog: [
+                { name: 'مداد رنگی', plural: 'مداد رنگی', icon: '✏️' },
+                { name: 'دفتر نقاشی', plural: 'دفتر نقاشی', icon: '📓' },
+                { name: 'پاک‌کن فانتزی', plural: 'پاک‌کن', icon: '🧼' },
+                { name: 'آب‌نبات چوبی', plural: 'آب‌نبات', icon: '🍭' },
+                { name: 'بستنی قیفی', plural: 'بستنی', icon: '🍦' },
+                { name: 'ماشین اسباب‌بازی', plural: 'ماشین', icon: '🚗' },
+                { name: 'توپ بازی', plural: 'توپ', icon: '⚽' }
+            ],
+            customers: [
+                { name: 'سارا', avatar: '👧' },
+                { name: 'امیرعلی', avatar: '👦' },
+                { name: 'مادربزرگ مهربون', avatar: '👵' },
+                { name: 'آقا معلم', avatar: '👨‍🏫' },
+                { name: 'پریسا', avatar: '🧒' }
+            ],
+
+            startNewRound() {
+                app.resetRoundMistakes();
+                const item = this.itemsCatalog[randInt(0, this.itemsCatalog.length - 1)];
+                const customer = this.customers[randInt(0, this.customers.length - 1)];
+                const [minF, maxF] = app.getFactorRange();
+
+                // Decide problem mode based on difficulty:
+                // 'multiply_total' (buy N items at P price)
+                // 'divide_count' (have T tomans, how many P-toman items can I buy?)
+                // 'change_left' (veryhard/hard: have W tomans, buy N items at P price, how much change?)
+                let mode = 'multiply_total';
+                if (app.difficulty === 'medium' && Math.random() < 0.4) {
+                    mode = 'divide_count';
+                } else if (app.difficulty === 'hard') {
+                    mode = Math.random() < 0.5 ? 'multiply_total' : 'divide_count';
+                } else if (app.difficulty === 'veryhard') {
+                    const r = Math.random();
+                    if (r < 0.4) mode = 'change_left';
+                    else if (r < 0.75) mode = 'divide_count';
+                    else mode = 'multiply_total';
+                }
+
+                const count = randInt(Math.max(2, minF), Math.min(8, maxF));
+                const unitPrice = randInt(Math.max(2, minF), maxF);
+                const totalCost = count * unitPrice;
+
+                document.getElementById('shopCustomerAvatar').textContent = customer.avatar;
+                document.getElementById('shopCustomerName').textContent = `مشتری: ${customer.name}`;
+                document.getElementById('shopUnitTag').textContent = `هر ${item.name} = ${toFa(unitPrice)} تومان`;
+
+                const walletBanner = document.getElementById('shopWalletBanner');
+                walletBanner.classList.add('hidden');
+
+                if (mode === 'multiply_total') {
+                    const correctAns = totalCost;
+                    this.currentProblem = { mode, item, count, unitPrice, totalCost, correctAns };
+
+                    document.getElementById('shopProblemTypeBadge').textContent = '🛒 محاسبه قیمت کل (ضرب)';
+                    document.getElementById('shopCustomerQuestion').innerHTML =
+                        `«سلام مغازه‌دار عزیز! من <span class="text-rose-600">${toFa(count)} تا ${item.name}</span> می‌خواهم که قیمت هر کدام <span class="text-emerald-700">${toFa(unitPrice)} تومان</span> است. جمعاً چند تومان باید بدهم؟»`;
+                    document.getElementById('shopAnswerPromptLabel').textContent = '💳 مبلغ کل خرید (به تومان) را انتخاب کن:';
+
+                    catGuide.say(`مشتری ${toFa(count)} تا ${item.name}ِ ${toFa(unitPrice)} تومانی می‌خواد. برچسب‌های قیمت روی پیشخوان رو ببین و حساب کن! 🏪`, 'happy');
+                } else if (mode === 'divide_count') {
+                    const correctAns = count;
+                    this.currentProblem = { mode, item, count, unitPrice, totalCost, correctAns };
+
+                    document.getElementById('shopProblemTypeBadge').textContent = '🧮 پیدا کردن تعداد خرید (تقسیم)';
+                    document.getElementById('shopCustomerQuestion').innerHTML =
+                        `«سلام! من <span class="text-purple-700">${toFa(totalCost)} تومان</span> پول دارم و می‌خواهم <span class="text-rose-600">${item.name}‌های ${toFa(unitPrice)} تومانی</span> بخرم. چند تا ${item.name} می‌توانم بخرم؟»`;
+                    document.getElementById('shopAnswerPromptLabel').textContent = `🛍️ تعداد ${item.name} که مشتری می‌تواند بخرد را انتخاب کن:`;
+
+                    walletBanner.classList.remove('hidden');
+                    walletBanner.textContent = `💰 پولِ همراه مشتری: ${toFa(totalCost)} تومان`;
+                    catGuide.say(`مشتری ${toFa(totalCost)} تومان داره و هر ${item.name} ${toFa(unitPrice)} تومانه. یعنی ${toFa(totalCost)} تقسیم بر ${toFa(unitPrice)} چند تا می‌شه؟ 🐾`, 'happy');
+                } else {
+                    // change_left (multi-step multiplication + subtraction)
+                    const change = randInt(2, 9);
+                    const paidMoney = totalCost + change;
+                    const correctAns = change;
+                    this.currentProblem = { mode, item, count, unitPrice, totalCost, paidMoney, correctAns };
+
+                    document.getElementById('shopProblemTypeBadge').textContent = '💵 محاسبه باقی‌مانده پول (ضرب و پول خرد)';
+                    document.getElementById('shopCustomerQuestion').innerHTML =
+                        `«من <span class="text-rose-600">${toFa(count)} تا ${item.name}</span> می‌خواهم که هر کدام <span class="text-emerald-700">${toFa(unitPrice)} تومان</span> است. یک اسکناس <span class="text-purple-700">${toFa(paidMoney)} تومانی</span> به شما می‌دهم. چند تومان باید به من پس بدهید؟»`;
+                    document.getElementById('shopAnswerPromptLabel').textContent = '💵 باقی‌مانده پول مشتری (به تومان) را انتخاب کن:';
+
+                    walletBanner.classList.remove('hidden');
+                    walletBanner.textContent = `💵 پول پرداختی مشتری: ${toFa(paidMoney)} تومان | اول قیمت ${toFa(count)} تا ${item.name} رو حساب کن!`;
+                    catGuide.say(`اول حساب کن ${toFa(count)} تا ${toFa(unitPrice)} تومانی چند می‌شه، بعد از ${toFa(paidMoney)} تومان کمش کن تا بقیه پولش معلوم بشه! 💡`, 'thinking');
+                }
+
+                this.renderShelf();
+                this.renderChoices();
+            },
+
+            renderShelf() {
+                const shelf = document.getElementById('shopShelfItems');
+                shelf.innerHTML = '';
+                const { mode, item, count, unitPrice } = this.currentProblem;
+
+                if (mode === 'multiply_total' || mode === 'change_left') {
+                    for (let i = 0; i < count; i++) {
+                        const card = document.createElement('div');
+                        card.className = 'bg-white border-2 border-amber-300 rounded-2xl px-3 py-2 flex flex-col items-center shadow-sm animate-pop';
+                        card.innerHTML = `
+                            <span class="text-3xl sm:text-4xl">${item.icon}</span>
+                            <span class="mt-1 bg-emerald-100 text-emerald-900 font-black text-xs px-2 py-0.5 rounded-lg border border-emerald-300">
+                                ${toFa(unitPrice)} تومان
+                            </span>
+                        `;
+                        shelf.appendChild(card);
+                    }
+                } else {
+                    // For division, show sample item with price tag and question mark boxes
+                    const sample = document.createElement('div');
+                    sample.className = 'bg-white border-2 border-rose-300 rounded-2xl px-4 py-3 flex items-center gap-3 shadow-sm';
+                    sample.innerHTML = `
+                        <span class="text-4xl sm:text-5xl">${item.icon}</span>
+                        <div class="text-right">
+                            <div class="font-black text-slate-800 text-sm sm:text-base">قیمت هر ۱ عدد ${item.name}:</div>
+                            <div class="font-black text-emerald-700 text-lg sm:text-xl">${toFa(unitPrice)} تومان</div>
+                        </div>
+                    `;
+                    shelf.appendChild(sample);
+                }
+            },
+
+            renderChoices() {
+                const { correctAns, mode } = this.currentProblem;
+                const set = new Set([correctAns]);
+                while (set.size < 4) {
+                    const step = mode === 'divide_count' ? randInt(-2, 3) : randInt(-5, 6);
+                    let cand = correctAns + step;
+                    if (cand <= 0 || cand === correctAns) cand = correctAns + set.size * 2;
+                    set.add(cand);
+                }
+                const choices = Array.from(set).sort((a, b) => a - b);
+                const suffix = mode === 'divide_count' ? ' عدد' : ' تومان';
+
+                const grid = document.getElementById('shopChoicesGrid');
+                grid.innerHTML = '';
+                choices.forEach(val => {
+                    const btn = document.createElement('button');
+                    btn.className = 'btn-3d btn-3d-rose bg-rose-500 hover:bg-rose-600 text-white font-black text-xl sm:text-2xl py-3 px-2 rounded-2xl shadow-md';
+                    btn.textContent = `${toFa(val)}${suffix}`;
+                    btn.onclick = () => this.checkAnswer(val);
+                    grid.appendChild(btn);
+                });
+            },
+
+            checkAnswer(selected) {
+                const p = this.currentProblem;
+                if (selected === p.correctAns) {
+                    if (p.mode === 'multiply_total') {
+                        app.showRewardModal(`مغازه‌دار باهوش! ${toFa(p.count)} تا ${p.item.name}ِ ${toFa(p.unitPrice)} تومانی دقیقاً می‌شه ${toFa(p.correctAns)} تومان!`);
+                    } else if (p.mode === 'divide_count') {
+                        app.showRewardModal(`آفرین! با ${toFa(p.totalCost)} تومان می‌شه دقیقاً ${toFa(p.correctAns)} تا ${p.item.name}ِ ${toFa(p.unitPrice)} تومانی خرید!`);
+                    } else {
+                        app.showRewardModal(`فوق‌العاده حساب کردی! خرید مشتری ${toFa(p.totalCost)} تومان شد و از ${toFa(p.paidMoney)} تومان، ${toFa(p.correctAns)} تومان بهش پس دادی!`);
+                    }
+                } else {
+                    app.recordMistake();
+
+                    // Build visual explanation with item price tags
+                    let itemsHtml = '<div class="flex flex-wrap items-center justify-center gap-2 mb-2">';
+                    for (let i = 1; i <= p.count; i++) {
+                        itemsHtml += `
+                            <div class="bg-white border-2 border-amber-300 rounded-xl px-2.5 py-1.5 flex flex-col items-center">
+                                <span class="text-2xl">${p.item.icon}</span>
+                                <span class="text-xs font-black text-emerald-800">${toFa(p.unitPrice)} تومان</span>
+                                <span class="text-[10px] text-slate-500">جمع: ${toFa(i * p.unitPrice)}</span>
+                            </div>
+                        `;
+                    }
+                    itemsHtml += '</div>';
+
+                    const sumChain = Array(p.count).fill(toFa(p.unitPrice)).join(' + ');
+
+                    if (p.mode === 'multiply_total') {
+                        app.showVisualExplanation(
+                            `بیا قیمت ${toFa(p.count)} تا ${p.item.name} را با هم جمع بزنیم:`,
+                            itemsHtml,
+                            `${sumChain} = <span class="text-2xl text-rose-600">${toFa(p.totalCost)} تومان</span><br>(${toFa(p.count)} × ${toFa(p.unitPrice)} = ${toFa(p.totalCost)})`
+                        );
+                    } else if (p.mode === 'divide_count') {
+                        app.showVisualExplanation(
+                            `ببینیم با ${toFa(p.totalCost)} تومان چند تا ${p.item.name}ِ ${toFa(p.unitPrice)} تومانی می‌توانیم برداریم:`,
+                            itemsHtml,
+                            `وقتی ${toFa(p.count)} تا برداریم جمعش می‌شود ${toFa(p.totalCost)} تومان!<br>پس ${toFa(p.totalCost)} ÷ ${toFa(p.unitPrice)} = <span class="text-2xl text-rose-600">${toFa(p.count)} عدد</span>!`
+                        );
+                    } else {
+                        app.showVisualExplanation(
+                            `گام اول: قیمت ${toFa(p.count)} تا ${p.item.name}ِ ${toFa(p.unitPrice)} تومانی می‌شود ${toFa(p.totalCost)} تومان:`,
+                            itemsHtml,
+                            `گام دوم (باقی‌مانده پول): ${toFa(p.paidMoney)} منهای ${toFa(p.totalCost)} = <span class="text-2xl text-rose-600">${toFa(p.correctAns)} تومان</span>!`
+                        );
+                    }
+                }
+            }
+        };
+
+        // Initialize on window load
+        window.onload = function () {
+            app.init();
+        };
+    </script>
+</body>
+</html>
